@@ -170,6 +170,17 @@ def set_disponibilidad(
 
 
 @app.post("/avisos")
+@app.get("/avisos")
+def list_avisos():
+    docs = db.collection("avisos").stream()
+    resultado = []
+
+    for doc in docs:
+        data = doc.to_dict() or {}
+        data["id"] = doc.id
+        resultado.append(data)
+        
+    return resultado
 def create_aviso(payload: CreateAvisoRequest):
     if payload.tipo not in VALID_CREATE_TYPES:
         raise HTTPException(status_code=400, detail="Tipo de aviso no valido")
